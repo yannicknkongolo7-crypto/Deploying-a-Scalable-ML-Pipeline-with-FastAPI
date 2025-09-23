@@ -2,6 +2,7 @@ import requests
 
 URL = "http://127.0.0.1:8000"
 
+
 def safe_request(method, url, **kwargs):
     try:
         r = requests.request(method, url, timeout=5, **kwargs)
@@ -17,6 +18,7 @@ def safe_request(method, url, **kwargs):
         print(f"⏱️ Request to {url} timed out.")
     except Exception as e:
         print(f"⚠️ Unexpected error calling {url}: {e}")
+
 
 # GET request
 safe_request("GET", URL)

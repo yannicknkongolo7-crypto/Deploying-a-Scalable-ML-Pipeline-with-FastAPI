@@ -1,7 +1,8 @@
 import os
+
 import pandas as pd
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from ml.data import apply_label, process_data
 from ml.model import inference, load_model
@@ -54,7 +55,9 @@ ENCODER_PATH = os.path.join(_PROJECT_ROOT, "model", "encoder.pkl")
 MODEL_PATH = os.path.join(_PROJECT_ROOT, "model", "model.pkl")
 
 if not os.path.exists(ENCODER_PATH):
-    raise RuntimeError(f"Encoder not found at {ENCODER_PATH}. Did you run train_model.py?")
+    raise RuntimeError(
+        f"Encoder not found at {ENCODER_PATH}. Did you run train_model.py?"
+    )
 if not os.path.exists(MODEL_PATH):
     raise RuntimeError(f"Model not found at {MODEL_PATH}. Did you run train_model.py?")
 
