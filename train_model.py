@@ -98,7 +98,14 @@ for col in cat_features:
         count = test[test[col] == slicevalue].shape[0]
         # function expected to compute masking internally and return (p, r, f1)
         p, r, fb = performance_on_categorical_slice(
-            test, y_test, preds, feature=col, slice_value=slicevalue
+            data=test,
+            column_name=col,
+            slice_value=slicevalue,
+            categorical_features=cat_features,
+            label="salary",
+            encoder=encoder,
+            lb=lb,
+            model=model,
         )
         with open(slice_file, "a") as f:
             print(f"{col}: {slicevalue}, Count: {count:,}", file=f)
