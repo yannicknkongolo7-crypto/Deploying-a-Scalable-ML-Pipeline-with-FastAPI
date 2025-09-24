@@ -1,1 +1,1 @@
-# Keep 'ml' a package.
+"""ML package."""
