@@ -1,38 +1,30 @@
-#!/usr/bin/env python3
-import pathlib
-import pandas as pd
+from pathlib import Path
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LogisticRegression
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.datasets import make_classification
+import joblib
 
-from ml.data import process_data
-from ml.model import save_model
+OUT = Path("model")
+OUT.mkdir(parents=True, exist_ok=True)
+# tiny synthetic dataset
+X, y = make_classification(n_samples=200, n_features=6, n_informative=4, random_state=0)
 
-# Repo root
-ROOT = pathlib.Path(__file__).resolve().parents[1]
+num_cols = list(range(X.shape[1]))
 
-# Data
-df = pd.read_csv(ROOT / "data" / "census.csv").sample(n=4000, random_state=42)
-
-cat_features = [
-    "workclass",
-    "education",
-    "marital-status",
-    "occupation",
-    "relationship",
-    "race",
-    "sex",
-    "native-country",
-]
-
-# Process + train a tiny model (small + fast)
-X, y, encoder, _ = process_data(
-    df, categorical_features=cat_features, label="salary", training=True
+pipe = Pipeline(
+    steps=[
+        ("pre", ColumnTransformer([("num", "passthrough", num_cols)])),
+        ("clf", LogisticRegression(max_iter=200)),
+    ]
 )
-clf = LogisticRegression(max_iter=400, n_jobs=None)  # tiny pickle, trains in seconds
-clf.fit(X, y)
 
-# Save to paths expected by main.py
-(ROOT := ROOT / "model").mkdir(exist_ok=True)
-save_model(clf, ROOT / "model.pkl")
-save_model(encoder, ROOT / "encoder.pkl")
+pipe.fit(X, y)
 
-print("[CI] Tiny model + encoder written to model/")
+# save artifacts with the exact names your app expects
+joblib.dump(pipe, OUT / "model.pkl")
+enc = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+joblib.dump(enc, OUT / "encoder.pkl")
+print("Artifacts saved to:", OUT.resolve())
