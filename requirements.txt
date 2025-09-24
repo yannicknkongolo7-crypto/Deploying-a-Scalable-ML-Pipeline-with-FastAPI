@@ -1,15 +1,9 @@
 fastapi==0.112.0
-uvicorn[standard]==0.30.5
+uvicorn==0.30.5
 pandas==2.2.2
 scikit-learn==1.5.1
-requests==2.32.3
-
-# test/lint tools used by CI
+joblib==1.4.2
+httpx==0.28.1
 pytest==8.3.2
 flake8==7.3.0
-
-# needed by fastapi.testclient / starlette.testclient
-httpx>=0.26,<1.0
-
-# optional but commonly present via sklearn deps
-joblib>=1.3
+requests==2.32.3

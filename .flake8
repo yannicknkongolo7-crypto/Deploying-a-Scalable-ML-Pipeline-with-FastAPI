@@ -13,5 +13,7 @@ exclude =
     dist,
     .ipynb_checkpoints,
     screenshots,
-    model,
-    data
+    data,
+    model
+per-file-ignores =
+    tests/*:E501
